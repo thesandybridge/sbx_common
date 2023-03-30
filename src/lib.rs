@@ -27,11 +27,11 @@ pub fn generate_random_vec(length: usize) -> Vec<isize> {
     return v;
 }
 
-pub fn generate_nordis_vec(length: usize) -> Vec<f64> {
+pub fn generate_nordis_vec(length: usize) -> Vec<u64> {
     let mut v = Vec::new();
     let normal = Normal::new(5000.0, 5000.0).unwrap();
     for _ in 0..length {
-        let val = normal.sample(&mut thread_rng());
+        let val = normal.sample(&mut thread_rng()) as u64;
         v.push(val);
     }
     return v;
