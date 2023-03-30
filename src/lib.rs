@@ -1,3 +1,6 @@
+use rand::prelude::*;
+use rand_distr::Normal;
+
 /// Generate a vector of n length with elements incrementing from 0 to (n - 1).
 ///
 /// # Arguments
@@ -19,7 +22,17 @@ pub fn generate_vec(length: usize) -> Vec<usize> {
 pub fn generate_random_vec(length: usize) -> Vec<isize> {
     let mut v = Vec::new();
     for _ in 0..length {
-        v.push(rand::random::<isize>());
+        v.push(random::<isize>());
+    }
+    return v;
+}
+
+pub fn generate_nordis_vec(length: usize) -> Vec<f64> {
+    let mut v = Vec::new();
+    let normal = Normal::new(5000.0, 5000.0).unwrap();
+    for _ in 0..length {
+        let val = normal.sample(&mut thread_rng());
+        v.push(val);
     }
     return v;
 }
