@@ -39,7 +39,7 @@ pub fn generate_random_vec(length: usize) -> Vec<isize> {
 pub fn generate_nordis_vec(length: usize, mean: f64, std_dev: f64, min: usize, max: usize) -> Vec<usize> {
     let mut v = Vec::with_capacity(length);
     let normal = Normal::new(mean, std_dev).unwrap();
-    for _ in 0..v.len() {
+    while v.len() < length {
         let num = normal.sample(&mut thread_rng()) as usize;
         if num >= min && num <= max {
             v.push(num)
