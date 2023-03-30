@@ -7,9 +7,9 @@ use rand_distr::Normal;
 ///
 /// * `length` - Length of the vector.
 pub fn generate_vec(length: usize) -> Vec<usize> {
-    let mut v = vec![0; length];
-    for i in 0..length {
-        v[i] = i;
+    let mut v = Vec::with_capacity(length);
+    for i in 0..v.len() {
+        v.push(i);
     }
     return v;
 }
@@ -20,19 +20,30 @@ pub fn generate_vec(length: usize) -> Vec<usize> {
 ///
 /// * `length` - Length of vector.
 pub fn generate_random_vec(length: usize) -> Vec<isize> {
-    let mut v = Vec::new();
-    for _ in 0..length {
+    let mut v = Vec::with_capacity(length);
+    for _ in 0..v.len(){
         v.push(random::<isize>());
     }
     return v;
 }
 
-pub fn generate_nordis_vec(length: usize) -> Vec<u64> {
-    let mut v = Vec::new();
-    let normal = Normal::new(5000.0, 5000.0).unwrap();
-    for _ in 0..length {
-        let val = normal.sample(&mut thread_rng()) as u64;
-        v.push(val);
+/// Generate a vector of random numbers that fall within normal distribution.
+///
+/// # Arguments
+///
+/// * `length` - length of the vector
+/// * `mean` - mid point for the distribution
+/// * `std_dev` - width of the distribution
+/// * `min` - min range
+/// * `max` - max range
+pub fn generate_nordis_vec(length: usize, mean: f64, std_dev: f64, min: usize, max: usize) -> Vec<usize> {
+    let mut v = Vec::with_capacity(length);
+    let normal = Normal::new(mean, std_dev).unwrap();
+    for _ in 0..v.len() {
+        let num = normal.sample(&mut thread_rng()) as usize;
+        if num >= min && num <= max {
+            v.push(num)
+        }
     }
     return v;
 }
