@@ -36,11 +36,11 @@ pub fn generate_random_vec(length: usize) -> Vec<isize> {
 /// * `std_dev` - width of the distribution
 /// * `min` - min range
 /// * `max` - max range
-pub fn generate_nordis_vec(length: usize, mean: f64, std_dev: f64, min: f64, max: f64) -> Vec<f64> {
+pub fn generate_nordis_vec(length: usize, mean: f64, std_dev: f64, min: usize, max: usize) -> Vec<usize> {
     let mut v = Vec::with_capacity(length);
     let normal = Normal::new(mean, std_dev).unwrap();
     for _ in 0..length {
-        let num = normal.sample(&mut thread_rng());
+        let num = normal.sample(&mut thread_rng()) as usize;
         if num >= min && num <= max {
             v.push(num)
         }
@@ -127,38 +127,45 @@ mod tests {
     use super::*;
 
     #[test]
-    fn vector() {
-        let vec = generate_vec(5);
-        assert_eq!(vec, vec![0, 1, 2, 3, 4]);
+    fn is_sequential_vector() {
+        let vec_a = generate_vec(5);
+        let vec_b = generate_vec(100);
+        assert_eq!(vec_a, vec![0, 1, 2, 3, 4]);
+
+        let mut v1 = Vec::with_capacity(100);
+        for i in 0..100 {
+            v1.push(i);
+        }
+        assert_eq!(vec_b, v1);
     }
 
     #[test]
-    fn random_vec() {
+    fn is_random_vec() {
         let vec_a = generate_random_vec(5);
         let vec_b = generate_random_vec(5);
         assert_ne!(vec_a, vec_b);
     }
 
     #[test]
-    fn add_by_fifteen_percent() {
+    fn is_plus_fifteen_percent() {
         let value = add_percent(100, 15);
         assert_eq!(value, 115);
     }
 
     #[test]
-    fn subtract_by_fifteen_percent() {
+    fn is_minus_fifteen_percent() {
         let value = sub_percent(100, 15);
         assert_eq!(value, 85);
     }
 
     #[test]
-    fn verify_normal_distribution() {
-        let data = generate_nordis_vec(1000, 5000.0, 5000.0, 0.0, 10000.0);
-        let std = generate_std_vec(1000);
+    fn is_standard_distribution() {
+        let a = generate_std_vec(500);
+        let b = generate_std_vec(1000);
 
-        let a = shapiro_wilk_test(&data);
-        let b = shapiro_wilk_test(&std);
+        let testa = shapiro_wilk_test(&a);
+        let testb = shapiro_wilk_test(&b);
 
-        assert!(a <= b);
+        assert!(testb <= testa);
     }
 }
