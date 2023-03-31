@@ -36,11 +36,11 @@ pub fn generate_random_vec(length: usize) -> Vec<isize> {
 /// * `std_dev` - width of the distribution
 /// * `min` - min range
 /// * `max` - max range
-pub fn generate_nordis_vec(length: usize, mean: f64, std_dev: f64, min: usize, max: usize) -> Vec<usize> {
+pub fn generate_nordis_vec(length: usize, mean: f64, std_dev: f64, min: f64, max: f64) -> Vec<f64> {
     let mut v = Vec::with_capacity(length);
     let normal = Normal::new(mean, std_dev).unwrap();
     for _ in 0..length {
-        let num = normal.sample(&mut thread_rng()) as usize;
+        let num = normal.sample(&mut thread_rng());
         if num >= min && num <= max {
             v.push(num)
         }
@@ -160,12 +160,12 @@ mod tests {
 
     #[test]
     fn is_standard_distribution() {
-        let a = generate_std_vec(500);
+        let a = generate_nordis_vec(1000, 5000.0, 5000.0, 0.0, 10000.0);
         let b = generate_std_vec(1000);
 
         let testa = shapiro_wilk_test(&a);
         let testb = shapiro_wilk_test(&b);
 
-        assert!(testb <= testa);
+        assert!(testa <= testb);
     }
 }
