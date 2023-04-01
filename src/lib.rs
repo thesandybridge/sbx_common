@@ -1,6 +1,18 @@
 use rand::prelude::*;
 use rand_distr::{Normal, StandardNormal};
 
+#[macro_export]
+macro_rules! debug {
+    ($debug:ident, $message:literal, $($value:expr),* ) => {
+        {
+           if $debug {
+               print!("DEBUG: ");
+               println!($message, $($value),*);
+           }
+        }
+    };
+}
+
 /// Generate a vector of n length with elements incrementing from 0 to (n - 1).
 ///
 /// # Arguments
